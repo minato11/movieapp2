@@ -5,7 +5,7 @@ import {useEffect, useState} from "react";
 import Link from "next/link";
 
 
-const Paginations = () => {
+const MovieList = () => {
 
     const [movies, setMovies] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
@@ -26,20 +26,14 @@ const Paginations = () => {
             }
         };
         fetchMovies();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [currentPage]);
-    console.log(movies)
 
     return (
         <div>
             <div className="flex  flex-wrap flex-row  dark:text-white">
-                <div className="flex lg:flex-1 text-center font-medium leading-6 text-gray-900 dark:text-white ">
-                    <h1 className="size-0.3">
-                        Trending movies:
-                    </h1>
-                </div>
-
                 <div className=' w-full content-around'>
-                    <div className="image-container flex flex-wrap justify-start m-6 p-3">
+                    <div className="image-container flex flex-wrap justify-between m-6 p-3">
                         {movies.map((movie) => (
                             <div key={movie.id}
                                  className=' font-extralight leading-6 text-gray-900 p-4 dark:text-white relative max-w-xs overflow-hidden bg-cover bg-no-repeat'>
@@ -57,7 +51,7 @@ const Paginations = () => {
                         ))
                         }
                     </div>
-                    <div className='flex justify-center'>
+                    <div className='flex justify-center pb-1'>
                         <Pagination
                             count={totalPages}
                             page={currentPage}
@@ -72,4 +66,4 @@ const Paginations = () => {
     )
 }
 
-export default Paginations
+export default MovieList
