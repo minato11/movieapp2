@@ -10,54 +10,41 @@ import {
     Popover,
     PopoverButton,
     PopoverGroup,
-    PopoverPanel,
+    PopoverPanel
 } from '@headlessui/react'
-import {
-    ArrowPathIcon,
-    Bars3Icon,
-    ChartPieIcon,
-    CursorArrowRaysIcon,
-    FingerPrintIcon,
-    SquaresPlusIcon,
-    XMarkIcon,
-} from '@heroicons/react/24/outline'
-import {ChevronDownIcon, PhoneIcon, PlayCircleIcon} from '@heroicons/react/20/solid'
-import SearchBar from "./SearchBar";
+import {Bars3Icon, XMarkIcon} from '@heroicons/react/24/outline'
+import {ChevronDownIcon} from '@heroicons/react/20/solid'
 import ThemeToggle from "./ThemeToggle";
 import Link from "next/link";
+import {getGenres} from "../utils/api";
 
-const GenreList = () => {
+
+const Header = () => {
     const [genres, setGenres] = useState([]);
-
-
-    const getGenres = async () => {
-        try {
-            const response = await fetch('https://api.themoviedb.org/3/genre/movie/list?api_key=f77adf9e4103d3a683d71fa4c240152a');
-            if (!response.ok) {
-                throw new Error('Network response error');
-            }
-            const json = await response.json();
-            setGenres(json.genres);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
-
-    useEffect(() => {
-        getGenres();
-    }, []);
-
-
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
+    useEffect(() => {
+        const fetchGenres = async () => {
+            try {
+                const genreData = await getGenres();
+                setGenres(genreData);
+            } catch (error) {
+                console.error('Error fetching genres:', error);
+            }
+        };
+        fetchGenres();
+    }, []);
     return (
         <header className="dark:bg-dark ">
             <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
                 <div className="flex lg:flex-1">
                     <a href="/" className="-m-1.5 p-1.5">
                         <span className="sr-only"></span>
-                        <img alt="" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                             className="h-8 w-auto"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                             stroke="currentColor" className="size-6 dark:text-white">
+                            <path strokeLinecap="round" strokeLinejoin="round"
+                                  d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
+                        </svg>
                     </a>
                 </div>
                 <div className="flex lg:hidden">
@@ -70,7 +57,7 @@ const GenreList = () => {
                         <Bars3Icon aria-hidden="true" className="h-6 w-6"/>
                     </button>
                 </div>
-                <PopoverGroup className="hidden lg:flex lg:gap-x-12">
+                <PopoverGroup className="hidden lg:flex lg:gap-x-12 ">
                     <Popover className="relative">
                         <PopoverButton
                             className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 dark:text-white">
@@ -83,13 +70,13 @@ const GenreList = () => {
                             className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in "
                         >
                             <div className="p-1">
-                                {genres.map((genre) => (
-                                    <div
-                                        key={genre.id}
-                                        className="group relative flex items-center gap-x-6 rounded-lg p-1.5 text-sm leading-6 hover:bg-gray-50"
-                                    >
-                                        <ol>{genre.name}</ol>
-                                    </div>
+                                {genres.map((genres) => (
+                                    <Link href={`/genres/${genres.id}`} key={genres.id}>
+                                        <div
+                                            className="group relative flex items-center gap-x-6 rounded-lg p-1.5 text-sm leading-6 hover:bg-gray-50 cursor-pointer">
+                                            <span>{genres.name}</span>
+                                        </div>
+                                    </Link>
                                 ))}
                             </div>
 
@@ -103,12 +90,13 @@ const GenreList = () => {
                     </a>
                     <div className="relative mb-4 flex w-full flex-wrap items-stretch md:w-96 dark:text-white">
                     </div>
+                    <div className="hidden lg:flex lg:flex-1 ">
+                        <a href="#" className="">
+                            <ThemeToggle/>
+                        </a>
+                    </div>
                 </PopoverGroup>
-                <div className="hidden lg:flex lg:flex-1 ">
-                    <a href="#" className="">
-                        <ThemeToggle/>
-                    </a>
-                </div>
+
                 <
                     div className="hidden lg:flex lg:flex-1 lg:justify-end">
                     <a href="/" className="text-sm font-semibold leading-6 text-gray-900 dark:text-white">
@@ -116,18 +104,18 @@ const GenreList = () => {
                     </a>
                 </div>
             </nav>
-            <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
-                <div className="fixed inset-0 z-10"/>
+            <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden ">
+                <div className="fixed inset-0 z-10 "/>
                 <DialogPanel
-                    className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 ">
-                    <div className="flex items-center justify-between">
+                    className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:bg-dark">
+                    <div className="flex items-center justify-between dark:bg-dark">
                         <a href="/" className="-m-1.5 p-1.5">
                             <span className="sr-only"></span>
-                            <img
-                                alt=""
-                                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                                className="h-8 w-auto"
-                            />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                                 stroke="currentColor" className="size-6">
+                                <path strokeLinecap="round" strokeLinejoin="round"
+                                      d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
+                            </svg>
                         </a>
                         <button
                             type="button"
@@ -138,12 +126,12 @@ const GenreList = () => {
                             <XMarkIcon aria-hidden="true" className="h-6 w-6"/>
                         </button>
                     </div>
-                    <div className="mt-6 flow-root">
+                    <div className="mt-6 flow-root dark:bg-medium h-full">
                         <div className="-my-6 divide-y divide-gray-500/10">
                             <div className="space-y-2 py-6">
                                 <Disclosure as="div" className="-mx-3">
                                     <DisclosureButton
-                                        className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+                                        className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:accent-transparent dark:text-blue-50">
                                         Genres
                                         <ChevronDownIcon aria-hidden="true"
                                                          className="h-5 w-5 flex-none group-data-[open]:rotate-180"/>
@@ -153,10 +141,13 @@ const GenreList = () => {
                                             <DisclosureButton
                                                 key={genre.id}
                                                 as="a"
-                                                className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                                                className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-transparent dark:text-blue-50"
                                             >
-                                                <Link href='#'>
-                                                    {genre.name}
+                                                <Link key={genre.id} href={`/genres/${genre.id}`}>
+                                                    <div
+                                                        className="group relative flex items-center gap-x-6 rounded-lg p-1.5 text-sm leading-6 hover:bg-gray-50 cursor-pointer">
+                                                        <span>{genre.name}</span>
+                                                    </div>
                                                 </Link>
                                             </DisclosureButton>
                                         ))}
@@ -164,13 +155,13 @@ const GenreList = () => {
                                 </Disclosure>
                                 <a
                                     href="/"
-                                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900  hover:bg-transparent dark:text-blue-50"
                                 >
                                     Favourite movies
                                 </a>
                                 <a
                                     href="/"
-                                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900  hover:bg-transparent dark:text-blue-50"
                                 >
                                     Profile
                                 </a>
@@ -188,7 +179,7 @@ const GenreList = () => {
                         <div className="py-6">
                             <a
                                 href="/"
-                                className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 "
+                                className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-transparent dark:text-blue-50 "
                             >
                                 Log in
                             </a>
@@ -201,4 +192,4 @@ const GenreList = () => {
 }
 
 
-export default GenreList
+export default Header

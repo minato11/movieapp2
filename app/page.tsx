@@ -2,11 +2,11 @@
 
 import React, { Suspense, useState, useEffect } from 'react';
 import Header from "../components/Header";
-import Paginations from "../components/MovieList";
 import SearchBar from "../components/SearchBar";
 import SearchResult from "../components/SearchResult";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import MovieList from "../components/MovieList";
+import axios from "axios";
 
 const HomePage = ({ searchParams }) => {
     const query = searchParams?.query || '';
@@ -19,7 +19,6 @@ const HomePage = ({ searchParams }) => {
     const [totalPages, setTotalPages] = useState(0);
     const [currentPageState, setCurrentPageState] = useState(currentPage);
 
-    const searchParamsHook = useSearchParams();
     const pathname = usePathname();
     const router = useRouter();
 
@@ -28,13 +27,9 @@ const HomePage = ({ searchParams }) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=f77adf9e4103d3a683d71fa4c240152a&query=${query}&page=${page}`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            setSearchResults(data.results);
-            setTotalPages(data.total_pages);
+            const res = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=f77adf9e4103d3a683d71fa4c240152a&query=${query}&page=${page}`);
+            setSearchResults(res.data.results);
+            setTotalPages(res.data.total_pages);
         } catch (error) {
             setError(error.message);
         } finally {
@@ -66,7 +61,7 @@ const HomePage = ({ searchParams }) => {
         if (query) {
             searchMovies(query, currentPageState);
         }
-    }, [searchParamsHook]);
+    }, [currentPageState, query]);
 
     return (
         <div>

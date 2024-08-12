@@ -2,31 +2,38 @@
 
 import React, {useEffect, useState} from 'react';
 import Header from "../../../components/Header";
+import NotFound from "./not-found";
+import axios from "axios";
+import Image from 'next/image'
+import MovieDetailsTypes from "./types";
+import Link from "next/link";
+
 
 const MovieDetailsPage = ({params}) => {
     const {id: movieId} = params;
-    const [movieDetails, setMovieDetails] = useState([])
+    const [movieDetails, setMovieDetails] = useState<MovieDetailsTypes | null>(null)
     useEffect(() => {
         const getMovieDetails = async () => {
             try {
-                const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=f77adf9e4103d3a683d71fa4c240152a`)
-                if (!res.ok) {
-                    throw new Error(`Could not find movie with id ${movieId}`)
-                }
-                const data = await res.json();
-                setMovieDetails(data);
+                const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}?api_key=f77adf9e4103d3a683d71fa4c240152a`)
+                setMovieDetails(res.data);
             } catch (error) {
                 console.log(error)
             }
         }
-        getMovieDetails();
+        getMovieDetails()
     }, [movieId]);
 
     if (!movieDetails) {
         return <p>Loading...</p>;
     }
-    const genreNames = movieDetails.genres?.map(item => item.name).join(', ') || [];
-    console.log(movieDetails);
+    const imageUrl = `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`;
+    const backdropUrl = `https://image.tmdb.org/t/p/w500${movieDetails.backdrop_path}`;
+
+
+    if (!movieDetails || !movieDetails.title) {
+        return <NotFound/>
+    }
 
 
     return (
@@ -36,8 +43,8 @@ const MovieDetailsPage = ({params}) => {
             </div>
             <div className='flex flex-nowrap justify-center text-center dark:text-gray-200'>
                 <div className='flex flex-nowrap justify-left relative max-w-xs overflow-hidden bg-cover bg-no-repeat'>
-                    <img
-                        src={`https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`}
+                    <Image
+                        src={imageUrl}
                         alt="movie_image"
                         width={500}
                         height={750}
@@ -55,22 +62,30 @@ const MovieDetailsPage = ({params}) => {
                         Overview: {movieDetails.overview}
                     </ul>
                     <ul className='text-2xl dark:text-blue-100 text-left'>
-                        Genres: {genreNames}
+                        Genres: {movieDetails.genres.map((genre) => (
+                        <Link key={genre.id} href={`/genres/${genre.id}`}>
+                            <span className="cursor-pointer hover:underline">{genre.name} </span>
+                        </Link>
+                    ))}
                     </ul>
                     <ul className='text-2xl dark:text-blue-100 text-left'>
-                         Origin country: {movieDetails.origin_country}
+                        Origin country: {movieDetails.origin_country}
                     </ul>
                     <ul className='text-2xl dark:text-blue-100 text-left'>
-                         Release date: {movieDetails.release_date}
+                        Release date: {movieDetails.release_date}
                     </ul>
                     <ul className='text-2xl dark:text-blue-100 text-left'>
-                         Duration: {movieDetails.runtime} minutes
+                        Duration: {movieDetails.runtime} minutes
                     </ul>
                     <ul>
-                        <img src={`https://image.tmdb.org/t/p/w500${movieDetails.backdrop_path}`} alt="previews"/>
+                        <Image
+                            src={backdropUrl}
+                            width={500}
+                            height={750}
+                            alt="previews"/>
                     </ul>
                     <ul>
-                        Rainting: {movieDetails.vote_average}
+                        Rating: {movieDetails.vote_average}
                     </ul>
 
 
@@ -81,5 +96,4 @@ const MovieDetailsPage = ({params}) => {
     );
 };
 
-
-export default MovieDetailsPage;
+export default MovieDetailsPage
