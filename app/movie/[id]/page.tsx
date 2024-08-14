@@ -37,28 +37,28 @@ const MovieDetailsPage = ({params}) => {
 
 
     return (
-        <div className="MovieDetails">
+        <div>
             <div>
                 <Header/>
             </div>
-            <div className='flex flex-nowrap justify-center text-center dark:text-gray-200'>
-                <div className='flex flex-nowrap justify-left relative max-w-xs overflow-hidden bg-cover bg-no-repeat'>
+            <div className='flex flex-wrap flex-row max-w-100% text-center dark:text-gray-200 p-5 lg:flex-nowrap'>
+                <div className='flex relative overflow-hidden bg-cover bg-no-repeat'>
                     <Image
                         src={imageUrl}
                         alt="movie_image"
                         width={500}
                         height={750}
-                        className='max-w-xs transition duration-300 ease-in-out hover:scale-110'
+                        className=' transition duration-300 ease-in-out hover:scale-110'
                     />
                 </div>
-                <div className='flex flex-col  items-center dark:text-gray-200 text-left'>
+                <div className='flex flex-col  items-center dark:text-gray-200 '>
                     {movieDetails.title && (
                         <h1 className='font-semibold text-4xl whitespace-nowrap'>
                             {movieDetails.title.toUpperCase()}
                         </h1>
                     )}
 
-                    <ul className='text-2xl dark:text-blue-100 text-left'>
+                    <ul className='text-2xl dark:text-blue-100 text-center'>
                         Overview: {movieDetails.overview}
                     </ul>
                     <ul className='text-2xl dark:text-blue-100 text-left'>

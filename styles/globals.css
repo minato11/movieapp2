@@ -35,14 +35,5 @@
   text-decoration: none;
 }
 
-/* Media Query for Small Screens */
-@media (max-width: 768px) {
-  .nav-items {
-    display: none;
-  }
-  .menu-icon {
-    display: block;
-    color: #fff;
-    /* Add your hamburger menu icon styling here */
-  }
-}
+
+
