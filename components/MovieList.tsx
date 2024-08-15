@@ -28,9 +28,9 @@ const MovieList = () => {
     }, [currentPage]);
     return (
         <div>
-            <div className="flex  flex-wrap flex-row  dark:text-white">
-                <div className=' w-full content-around'>
-                    <div className="image-container flex flex-wrap justify-between m-6 p-3">
+            <div className="flex  flex-wrap flex-row  dark:text-white ">
+                <div className=' w-full content-around '>
+                    <div className="image-container flex flex-wrap justify-between m-6 p-3 sm:max-w-full">
                         {movies.map((movie) => (
                             <div key={movie.id}
                                  className=' font-extralight leading-6 text-gray-900 p-4 dark:text-white relative max-w-xs overflow-hidden bg-cover bg-no-repeat'>

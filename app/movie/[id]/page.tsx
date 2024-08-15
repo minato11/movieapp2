@@ -41,15 +41,18 @@ const MovieDetailsPage = ({params}) => {
             <div>
                 <Header/>
             </div>
-            <div className='flex flex-wrap flex-row max-w-100% text-center dark:text-gray-200 p-5 lg:flex-nowrap'>
-                <div className='flex relative overflow-hidden bg-cover bg-no-repeat'>
-                    <Image
-                        src={imageUrl}
-                        alt="movie_image"
-                        width={500}
-                        height={750}
-                        className=' transition duration-300 ease-in-out hover:scale-110'
-                    />
+            <div className='flex flex-wrap flex-row max-w-100% text-center  dark:text-gray-200 p-5 lg:flex-nowrap'>
+                <div className='justify-items-center px-12 mx-10'>
+                    <div className='flex relative overflow-hidden bg-cover bg-no-repeat '>
+                        <Image
+                            src={imageUrl}
+                            alt="movie_image"
+                            width={500}
+                            height={750}
+                            priority
+                            className=' transition duration-300 ease-in-out hover:scale-110'
+                        />
+                    </div>
                 </div>
                 <div className='flex flex-col  items-center dark:text-gray-200 '>
                     {movieDetails.title && (
