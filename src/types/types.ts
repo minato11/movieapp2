@@ -24,8 +24,8 @@ export type MovieParams = {
   params: {
     id: number;
   };
-
 };
+
 export interface MovieDetailsTypes {
   params: {
     id: number;
@@ -38,7 +38,7 @@ export interface MovieDetailsTypes {
   release_date: string;
   runtime: number;
   poster_path: string;
-  movieDetails:[];
+  movieDetails: [];
   backdrop_path: string;
   vote_average: number;
   imageUrl: string;
@@ -70,3 +70,8 @@ export interface HomePageTypes {
     page: number;
   };
 }
+
+export interface FilmListingProps {
+  movies: Movie[];
+}
+

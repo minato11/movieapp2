@@ -74,7 +74,10 @@ const Header = () => {
           <Popover className="relative">
             <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 dark:text-white">
               Genres
-              <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-black dark:text-white" />
+              <ChevronDownIcon
+                aria-hidden="true"
+                className="h-5 w-5 flex-none text-black dark:text-white"
+              />
             </PopoverButton>
 
             <PopoverPanel
