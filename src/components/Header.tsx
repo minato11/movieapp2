@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Dialog,
   DialogPanel,
@@ -15,26 +15,17 @@ import {
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import ThemeToggle from '../../../movies-app/components/ThemeToggle';
-import Link from 'next/link';
-import { getGenres } from '../../../movies-app/utils/api';
 import React from 'react';
-import { Genres } from '../../../movies-app/types/types';
+import { Genres } from '@/types/types';
 
-const Header = () => {
-  const [genres, setGenres] = useState<Genres[]>([]);
+interface HeaderProps {
+  genres: Genres[];
+  handleGenreChange: (newGenreId: string) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ genres, handleGenreChange }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchGenres = async () => {
-      try {
-        const genreData = await getGenres();
-        setGenres(genreData);
-      } catch (error) {
-        console.error('Error fetching genres:', error);
-      }
-    };
-    fetchGenres();
-  }, []);
   return (
     <header className="dark:bg-dark">
       <nav
@@ -80,20 +71,24 @@ const Header = () => {
               />
             </PopoverButton>
 
-            <PopoverPanel
-              transition
-              className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
-            >
-              <div className="p-1">
-                {genres.map((genres) => (
-                  <Link href={`/genres/${genres.id}`} key={genres.id}>
-                    <div className="group relative flex cursor-pointer items-center gap-x-6 rounded-lg p-1.5 text-sm leading-6 hover:bg-gray-50">
-                      <span>{genres.name}</span>
+            {genres && genres.length > 0 && (
+              <PopoverPanel
+                  transition
+                className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
+              >
+                <div className="p-1">
+                  {genres.map((genre) => (
+                    <div
+                      key={genre.id}
+                      onClick={() => handleGenreChange(genre.id.toString())}
+                      className="group relative flex cursor-pointer items-center gap-x-6 rounded-lg p-1.5 text-sm leading-6 hover:bg-gray-50"
+                    >
+                      <span>{genre.name}</span>
                     </div>
-                  </Link>
-                ))}
-              </div>
-            </PopoverPanel>
+                  ))}
+                </div>
+              </PopoverPanel>
+            )}
           </Popover>
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900 dark:text-white">
             Favourite Movies
@@ -148,7 +143,7 @@ const Header = () => {
           <div className="mt-6 flow-root h-full dark:bg-medium">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
-                <Disclosure as="div" className="-mx-3">
+                <Disclosure as="div" className="-mx-3 relative">
                   <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:accent-transparent dark:text-blue-50">
                     Genres
                     <ChevronDownIcon
@@ -156,22 +151,24 @@ const Header = () => {
                       className="h-5 w-5 flex-none group-data-[open]:rotate-180"
                     />
                   </DisclosureButton>
-                  <DisclosurePanel className="mt-2 space-y-2">
-                    {genres.map((genre) => (
-                      <DisclosureButton
-                        key={genre.id}
-                        as="a"
-                        className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-transparent dark:text-blue-50"
-                      >
-                        <Link key={genre.id} href={`/genres/${genre.id}`}>
-                          <div className="group relative flex cursor-pointer items-center gap-x-6 rounded-lg p-1.5 text-sm leading-6 hover:bg-gray-50">
-                            <span>{genre.name}</span>
-                          </div>
-                        </Link>
-                      </DisclosureButton>
-                    ))}
-                  </DisclosurePanel>
+                  {genres && genres.length > 0 && (
+                    <DisclosurePanel
+                      transition
+                      className="absolute  top-full z-10 mt-3 w-screen max-w-md overflow-hidden  bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
+                    >
+                      {genres.map((genre) => (
+                        <DisclosureButton
+                          key={genre.id}
+                          onClick={() => handleGenreChange(genre.id.toString())}
+                          className="group relative flex cursor-pointer items-center gap-x-6 rounded-lg p-1.5 text-sm  leading-6 hover:bg-gray-50"
+                        >
+                          <span>{genre.name}</span>
+                        </DisclosureButton>
+                      ))}
+                    </DisclosurePanel>
+                  )}
                 </Disclosure>
+
                 <a
                   href="/"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-transparent dark:text-blue-50"

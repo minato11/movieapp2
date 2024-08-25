@@ -12,19 +12,12 @@ export interface SearchResultProps {
   currentPage: number;
   onPageChange: (page: number) => void;
 }
-
-export type Genres = {
+export interface Genres {
   id: number;
   name: string;
-  overview: string;
-  genres: GenreListTypes[];
-};
+}
 
-export type MovieParams = {
-  params: {
-    id: number;
-  };
-};
+
 
 export interface MovieDetailsTypes {
   params: {
@@ -47,6 +40,7 @@ export interface MovieDetailsTypes {
 }
 
 export interface GenreListTypes {
+  name: string;
   params: {
     id: number;
   };
@@ -54,8 +48,8 @@ export interface GenreListTypes {
   id: number;
   title: string;
   overview: string;
-  genres: [];
-  movieData: [];
+  genres: { id: number; name: string }[]
+  movieData: Movie[];
   totalPages: number;
   currentPage: number;
   genreId: number;
@@ -74,4 +68,3 @@ export interface HomePageTypes {
 export interface FilmListingProps {
   movies: Movie[];
 }
-
