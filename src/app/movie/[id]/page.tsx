@@ -77,7 +77,7 @@ const MovieDetailsPage = ({ params }: MovieDetailsTypes) => {
 
     return (
       <div>
-          <div className="relative z-10 header">
+          <div className="relative z-10 header ">
               <Header genres={genres} handleGenreChange={handleGenreChange} />
           </div>
           <div className="inset-0 z-0 background-img">
@@ -88,25 +88,25 @@ const MovieDetailsPage = ({ params }: MovieDetailsTypes) => {
                 objectFit="cover"
                 quality={100}
                 priority
-                className="pointer-events-none"
+                className="pointer-events-none sm:hidden"
               />
           </div>
-          <div className="relative max-w-screen-xl mx-auto p-5 text-white lg:flex lg:items-center">
+          <div className="relative max-w-screen-xl mx-auto p-5 text-white lg:flex lg:items-center ">
               <div className="flex-shrink-0 mx-10">
-                  <div className="relative flex bg-cover bg-no-repeat">
+                  <div className="relative flex bg-cover bg-no-repeat ">
                       <Image
                         src={imageUrl}
                         alt="movie_image"
                         width={500}
                         height={750}
                         priority
-                        className="rounded-lg shadow-lg transition duration-150 ease-in-out hover:scale-110"
+                        className="rounded-lg shadow-lg transition duration-150 ease-in-out hover:scale-110 sm:w-full sm:h-full"
                       />
                   </div>
               </div>
-              <div className="mt-8 lg:mt-0 lg:ml-10 flex flex-col items-start">
+              <div className="mt-8 lg:mt-0 lg:ml-10 flex flex-col items-center text-black dark:text-blue-50">
                   {movieDetails.title && (
-                    <h1 className="text-4xl font-semibold">{movieDetails.title.toUpperCase()}</h1>
+                    <h1 className="text-4xl  font-semibold">{movieDetails.title.toUpperCase()}</h1>
                   )}
                   <ul className="mt-4 text-lg">
                       <li className="mb-2">Overview: {movieDetails.overview}</li>
